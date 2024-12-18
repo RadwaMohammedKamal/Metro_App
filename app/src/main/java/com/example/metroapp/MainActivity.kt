@@ -1,5 +1,4 @@
 package com.example.metroapp
-
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
@@ -76,6 +75,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, allStations)
         startStation.adapter = adapter
         endStation.adapter = adapter
+
     }
 
     fun calculate(view: View) {
@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "you have to choose defferent stations", Toast.LENGTH_SHORT).show()
             return
         }
-
+       //get the name of sattion from spinner
         val startStationName = startStation.selectedItem.toString()
         val endStationName = endStation.selectedItem.toString()
 
@@ -95,6 +95,7 @@ class MainActivity : AppCompatActivity() {
         var shortestRoute: List<String>? = null
         var direction: String = ""
 
+        //same line
         for (line in lines) {
             if (startStationName in line && endStationName in line) {
                 val startIndex = line.indexOf(startStationName)
@@ -106,8 +107,7 @@ class MainActivity : AppCompatActivity() {
                 break
             }
         }
-
-        if (shortestRoute == null) {
+        // defferent lines
             for (line in lines) {
                 if (startStationName !in line) continue
                 val startIndex = line.indexOf(startStationName)
@@ -138,8 +138,8 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-        }
 
+        //calc the price
         if (shortestRoute != null) {
             val numberOfStations = shortestRoute.size
             val priceForNormalPeople = when {
@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity() {
             }
             val priceForOlderPeople = priceForNormalPeople / 2
 
+            //print the output
             number.text ="Number of stations : ${numberOfStations.toString()} Stations "
             time.text = "Estimated time : ${numberOfStations * 2} minutes "
             directionstation.text = "Direction : ${ direction } "
@@ -160,14 +161,15 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Route calculated successfully", Toast.LENGTH_SHORT).show()
         }
     }
-
+// swap between two spinner
     fun swap(view: View) {
+        //get the name of sattion
         val startStationName = startStation.selectedItem.toString()
         val endStationName = endStation.selectedItem.toString()
-
+        //git the position of station
         val startPosition = startStation.selectedItemPosition
         val endPosition = endStation.selectedItemPosition
-
+       //swap between two spinner
         startStation.setSelection(endPosition)
         endStation.setSelection(startPosition)
 
