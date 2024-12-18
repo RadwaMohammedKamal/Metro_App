@@ -91,12 +91,10 @@ class MainActivity : AppCompatActivity() {
         val startStationName = startStation.selectedItem.toString()
         val endStationName = endStation.selectedItem.toString()
 
-        // تحقق إذا كانت المحطات المحددة صحيحة
         val lines = listOf(line1, line2, line3, line4)
         var shortestRoute: List<String>? = null
         var direction: String = ""
 
-        // البحث عن أقصر طريق بين المحطات
         for (line in lines) {
             if (startStationName in line && endStationName in line) {
                 val startIndex = line.indexOf(startStationName)
