@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var otherprice: TextView
     lateinit var route: TextView
 
-    // قائمة المحطات للخطوط المختلفة
     val line1 = listOf(
         "helwan", "ain helwan", "helwan university", "wadi hof",
         "hadayek helwan", "elmasraa", "tura el-esmant", "kozzika",
@@ -54,10 +53,8 @@ class MainActivity : AppCompatActivity() {
         "gamet el dowel", "boulak el dakrour", "cairo university"
     )
 
-    // قائمة المحطات المشتركة
     val commonStations = listOf("sadat", "al-shohada", "attaba", "nasser", "cairo university", "kit kat")
 
-    // دمج جميع المحطات في قائمة واحدة
    // val allStations = mutableListOf("Please select station") + line1 + line2 + line3 + line4
     val allStations = mutableListOf("Please select station") + (line1 + line2 + line3 + line4).distinct()
 
@@ -65,7 +62,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // إعداد عناصر الواجهة
         startStation = findViewById(R.id.startStation)
         endStation = findViewById(R.id.endStation)
         calculate = findViewById(R.id.calculate)
@@ -77,15 +73,12 @@ class MainActivity : AppCompatActivity() {
         otherprice = findViewById(R.id.otherprice)
         route = findViewById(R.id.route)
 
-        // إعداد محول البيانات للقائمة
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, allStations)
         startStation.adapter = adapter
         endStation.adapter = adapter
     }
 
-    // دالة حساب المسار عند الضغط على الزر
     fun calculate(view: View) {
-        // التحقق من اختيار المحطات
         if (startStation.selectedItemPosition == 0 || endStation.selectedItemPosition == 0) {
             Toast.makeText(this, "Please select both start and end stations", Toast.LENGTH_SHORT).show()
             return
@@ -95,7 +88,6 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        // استخراج المحطات المختارة
         val startStationName = startStation.selectedItem.toString()
         val endStationName = endStation.selectedItem.toString()
 
@@ -117,7 +109,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // إذا كانت المحطات على خطوط مختلفة
         if (shortestRoute == null) {
             for (line in lines) {
                 if (startStationName !in line) continue
@@ -141,7 +132,6 @@ class MainActivity : AppCompatActivity() {
                             } else {
                                 startToTransferStation + transferToEndStation
                             }
-
                             if (shortestRoute == null || fullRoute.size <= shortestRoute.size) {
                                 shortestRoute = fullRoute
                                 direction = if (endIndex > transferIndex2) tline.last() else tline.first()
@@ -152,7 +142,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // عرض النتائج
         if (shortestRoute != null) {
             val numberOfStations = shortestRoute.size
             val priceForNormalPeople = when {
@@ -175,112 +164,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun swap(view: View) {
-        // Get the currently selected items from both spinners
         val startStationName = startStation.selectedItem.toString()
         val endStationName = endStation.selectedItem.toString()
 
-        // Swap the selections by updating the spinner adapters
         val startPosition = startStation.selectedItemPosition
         val endPosition = endStation.selectedItemPosition
 
-        startStation.setSelection(endPosition)  // Set the end station as the start station
-        endStation.setSelection(startPosition)  // Set the start station as the end station
+        startStation.setSelection(endPosition)
+        endStation.setSelection(startPosition)
 
-        // Optional: You can update the route or perform additional operations after the swap if needed.
-        calculate(view)  // You can call the calculate function to recompute the route if desired
+        calculate(view)
     }
 
 }
-
-
-
-
-//package com.example.metroapp
-//
-//import android.os.Bundle
-//import android.view.View
-//import android.widget.ArrayAdapter
-//import android.widget.Button
-//import android.widget.Spinner
-//import android.widget.TextView
-//import android.widget.Toast
-//import androidx.activity.enableEdgeToEdge
-//import androidx.appcompat.app.AppCompatActivity
-//import androidx.core.view.ViewCompat
-//import androidx.core.view.WindowInsetsCompat
-//
-//class MainActivity : AppCompatActivity() {
-//    lateinit var startStation: Spinner
-//    lateinit var endStation: Spinner
-//    lateinit var calculate: Button
-//    lateinit var number: TextView
-//    lateinit var time: TextView
-//    lateinit var direction: TextView
-//    lateinit var price: TextView
-//    lateinit var route: TextView
-//    val line1 = listOf(
-//        "helwan", "ain helwan", "helwan university", "wadi hof",
-//        "hadayek helwan", "elmasraa", "tura el-esmant", "kozzika",
-//        "tora el-balad", "sakanat el-maadi", "maadi", "hadayek el-maadi",
-//        "dar el-salam", "el-zahraa", "mar girgis", "el-malek el-saleh",
-//        "al-sayeda zeinab", "saad zaghloul", "sadat", "nasser", "arabi",
-//        "al-shuhada", "ghamra", "damardash", "manshiyet el-sadr", "kobry el-qobba",
-//        "hammamat el-qobba", "saray el-qobba", "hadid el-zeitoun", "helmeyet el-zeitoun",
-//        "rabi'ya", "ain shams", "ezbet el-nakhl", "el-marg", "new el-marg"
-//    )
-//    val line2 = listOf(
-//        "shubra al khaimah", "koliet el-zeraa", "mezallat", "khalafawy",
-//        "st. teresa", "rod el-farag", "masarra", "al-shohada", "attaba",
-//        "mohamed naguib", "sadat", "operal", "dokki", "el bohoth",
-//        "cairo university", "faisal", "giza", "omm el masryeen", "sakiat mekky",
-//        "al monib"
-//    )
-//
-//    val line3 = listOf(
-//        "adly mansour", "haykestep", "omar ibn el-khattab", "qobaa", "hesham barakat", "el-nozha", "el-shams club",
-//        "alf maskan", "heliopolis square", "al-ahram", "haroun", "stadium", "fair zone", "abbassiya", "abdou pasha",
-//        "el-geish", "bab el-shaaria", "attaba", "nasser", "maspero", "safaa hijazy", "kit kat", "sudan", "imbaba",
-//        "el-bohy", "el-qawmia", "ring road", "rawd al-farag corridor"
-//    )
-//
-//    val line4 = listOf(
-//        "adly mansour", "haykestep", "omar ibn el-khattab", "qobaa", "hesham barakat", "el-nozha", "el-shams club",
-//        "alf maskan", "heliopolis square", "al-ahram", "haroun", "stadium", "fair zone", "abbassiya", "abdou pasha",
-//        "el-geish", "bab el-shaaria", "attaba", "nasser", "maspero", "safaa hijazy", "kit kat", "tawfiqiya", "wadi el nil",
-//        "gamet el dowel", "boulak el dakrour", "cairo university"
-//    )
-//    val commonStations = listOf("sadat", "al-shohada", "attaba", "nasser", "cairo university","kit kat")
-//    val allStations = mutableListOf("Please select station") + line1 + line2 + line3 + line4
-//
-//
-//
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
-//        setContentView(R.layout.activity_main)
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
-//        startStation=findViewById(R.id.startStation)
-//        endStation=findViewById(R.id.endStation)
-//        calculate=findViewById(R.id.calculate)
-//        number=findViewById(R.id.number)
-//        time=findViewById(R.id.time)
-//        direction=findViewById(R.id.direction)
-//        price=findViewById(R.id.price)
-//        route=findViewById(R.id.route)
-//        val adapter= ArrayAdapter(this,android.R.layout.simple_list_item_1,allStations)
-//        startStation.adapter=adapter
-//        endStation.adapter=adapter
-//    }
-//
-//    fun calculate(view: View) {
-//        if (startStation.selectedItemPosition==0&&endStation.selectedItemPosition==0){
-//            Toast.makeText(this, "please select station", Toast.LENGTH_SHORT).show()
-//            return
-//        }
-//    }
-//}
