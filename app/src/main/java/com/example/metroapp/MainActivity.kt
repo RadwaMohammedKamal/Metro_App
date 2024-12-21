@@ -7,7 +7,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-
+// addint transation stations
 class MainActivity : AppCompatActivity() {
     lateinit var startStation: Spinner
     lateinit var endStation: Spinner
@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var price: TextView
     lateinit var otherprice: TextView
     lateinit var route: TextView
+    lateinit var comstation: TextView
+
+
 
     val line1 = listOf(
         "helwan", "ain helwan", "helwan university", "wadi hof",
@@ -26,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         "tora el-balad", "sakanat el-maadi", "maadi", "hadayek el-maadi",
         "dar el-salam", "el-zahraa", "mar girgis", "el-malek el-saleh",
         "al-sayeda zeinab", "saad zaghloul", "sadat", "nasser", "arabi",
-        "al-shuhada", "ghamra", "damardash", "manshiyet el-sadr", "kobry el-qobba",
+        "al-shohada", "ghamra", "damardash", "manshiyet el-sadr", "kobry el-qobba",
         "hammamat el-qobba", "saray el-qobba", "hadid el-zeitoun", "helmeyet el-zeitoun",
         "rabi'ya", "ain shams", "ezbet el-nakhl", "el-marg", "new el-marg"
     )
@@ -55,7 +58,7 @@ class MainActivity : AppCompatActivity() {
     val commonStations = listOf("sadat", "al-shohada", "attaba", "nasser", "cairo university", "kit kat")
 
    // val allStations = mutableListOf("Please select station") + line1 + line2 + line3 + line4
-    val allStations = mutableListOf("Please select station") + (line1 + line2 + line3 + line4).distinct()
+    val allStations = mutableListOf("Please select station") + (line1 + line2 + line3 + line4).distinct().sorted()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +74,9 @@ class MainActivity : AppCompatActivity() {
         price = findViewById(R.id.price)
         otherprice = findViewById(R.id.otherprice)
         route = findViewById(R.id.route)
+        comstation=findViewById(R.id.comstation)
+
+
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, allStations)
         startStation.adapter = adapter
@@ -149,6 +155,21 @@ class MainActivity : AppCompatActivity() {
                 else -> 20
             }
             val priceForOlderPeople = priceForNormalPeople / 2
+            var commonR: MutableList<String>? = null
+
+            if (commonR != null) {
+                commonR.clear()
+            } else {
+                commonR = mutableListOf()
+            }
+            for (station in shortestRoute) {
+                if (station in commonStations && station != "kit kat") {
+                    commonR.add(station)
+                }
+            }
+
+
+
 
             //print the output
             number.text ="Number of stations : ${numberOfStations.toString()} Stations "
@@ -157,6 +178,13 @@ class MainActivity : AppCompatActivity() {
             price.text = "Ticket price : $priceForNormalPeople EGP "
             otherprice.text = "price for elderly: $priceForOlderPeople EGP, for special needs:5 EGP "
             route.text = "Shortes Route : ${shortestRoute.joinToString(" -> ")} "
+            if (!commonR.isNullOrEmpty()) {
+                comstation.text = "Transaction station : ${commonR.joinToString(" , ")}"
+            } else {
+                comstation.text = "Transaction station : No transaction stations found"
+            }
+
+
 
             Toast.makeText(this, "Route calculated successfully", Toast.LENGTH_SHORT).show()
         }
